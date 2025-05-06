@@ -2,6 +2,7 @@
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.DevTools.V133.FedCm;
+using OpenQA.Selenium.Interactions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +17,8 @@ namespace LambatestProject.Tests
         protected BasePage basePage;
         protected RegistrationPage registrationPage;
         protected LoginPage loginPage;
+        protected MegaMenuPage megaMenuPage;
+        protected ComparePage comparePage;
         protected Random random;
 
 
@@ -24,6 +27,10 @@ namespace LambatestProject.Tests
         {
             var chromeOptions = new ChromeOptions();
             chromeOptions.AddUserProfilePreference("profile.password_manager_enabled", false);
+            chromeOptions.AddUserProfilePreference("credentials_enable_service", false);
+            chromeOptions.AddArgument("--disable-blink-features=AutomationControlled");
+            chromeOptions.AddArgument("--incognito");
+
             driver = new ChromeDriver(chromeOptions);
             driver.Manage().Window.Maximize();
             driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
@@ -31,6 +38,8 @@ namespace LambatestProject.Tests
             basePage = new BasePage(driver);
             registrationPage = new RegistrationPage(driver);
             loginPage = new LoginPage(driver);
+            megaMenuPage = new MegaMenuPage(driver);
+            comparePage = new ComparePage(driver);
             basePage.GoToHomePage();
         }
         public class UserModel

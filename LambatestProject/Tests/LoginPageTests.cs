@@ -85,7 +85,7 @@ namespace LambatestProject.Tests
 
             Assert.That(loginPage.ConfirmationMessageForPasswordReset.Text, Is.EqualTo("An email with a confirmation link has been sent your email address."), "Password reset was not successful with valid email");
 
-            Assert.That(driver.Url.Contains("account/login"));
+            Assert.That(driver.Url.Contains("account/login"), "URL was not the correct one");
         }
 
         [Test, Order(8)]
@@ -97,7 +97,7 @@ namespace LambatestProject.Tests
             // Assert
             Assert.That(loginPage.ErrorMessageForLoginAndResetPassword.Text, Is.EqualTo("Warning: The E-Mail Address was not found in our records, please try again!"), "Password reset was successful with invalid email");
 
-            Assert.That(driver.Url.Contains("account/forgotten"));
+            Assert.That(driver.Url.Contains("account/forgotten"), "URL redirection was not the correct one");
         }
     }
 }

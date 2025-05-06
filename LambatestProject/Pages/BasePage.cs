@@ -29,6 +29,7 @@ namespace LambatestProject.Pages
         public IWebElement AllCategoriesDropdown => driver.FindElement(By.XPath("(//div[@class='dropdown search-category']//button[@class='btn dropdown-toggle'])[1]"));
         public IWebElement SearchField => driver.FindElement(By.XPath("//div[@class='flex-fill']//input[@data-autocomplete='5']"));
         public IWebElement SearchButton => driver.FindElement(By.XPath("//button[text()='Search']"));
+        public IWebElement MegaMenuButton => driver.FindElement(By.XPath("//li[@class='nav-item dropdown dropdown-hoverable mega-menu position-static']//div[@class='info']//span[@class='title']"));
         public IWebElement CompareButton => driver.FindElement(By.XPath("//div[@id='entry_217823']"));
         public IWebElement WishListButton => driver.FindElement(By.XPath("//div[@id='entry_217824']"));
         public IWebElement CartButton => driver.FindElement(By.XPath("//div[@id='entry_217825']"));
@@ -38,14 +39,30 @@ namespace LambatestProject.Pages
         public IWebElement LoginButton => driver.FindElement(By.XPath("//a[@href='https://ecommerce-playground.lambdatest.io/index.php?route=account/login']"));
         public IWebElement RegisterButton => driver.FindElement(By.XPath("//a[@href='https://ecommerce-playground.lambdatest.io/index.php?route=account/register']"));
 
-        public void WaitUntilElementIsVisible(By locator)
+        public IWebElement WaitUntilElementIsVisible(By locator)
         {
-            wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(locator)) ;
+            return wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(locator));
         }
 
-        public void WaitUntilElementIsClickable(By locator)
+        public IWebElement WaitUntilElementIsClickable(By locator)
         {
-            wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(locator));
+           return wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(locator));
+        }
+        public void SafeClickOnElement(By locator, int timeoutSeconds = 20, int dellayAfterScrollInMs = 500)
+        {
+            try
+            {
+                WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(timeoutSeconds));
+                IWebElement element = wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(locator));
+
+                ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView({block: 'center'});", element);
+
+                ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", element);
+            }
+            catch(WebDriverTimeoutException)
+            {
+                Console.WriteLine($"Element with locator: {locator} was not clickable within the given time");
+            }
         }
     }
 }
